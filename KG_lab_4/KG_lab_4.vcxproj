@@ -147,7 +147,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ChessCube.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="STBDef.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChessCube.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\chessBoardTexture.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
