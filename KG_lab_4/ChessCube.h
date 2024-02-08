@@ -1,5 +1,8 @@
 #pragma once
+#include <GL/glew.h>
 #include <GL/glut.h>
+#include "stb_image.h"
+#include <iostream>
 
 class ChessCube
 {

@@ -30,15 +30,47 @@ void ChessCube::drawBox(GLfloat size, GLenum type)
 	v[0][2] = v[3][2] = v[4][2] = v[7][2] = -size / 2;
 	v[1][2] = v[2][2] = v[5][2] = v[6][2] = size / 2;
 
+	GLfloat texCoords[4][2] = { {0.0, 0.0}, {1.0, 0.0}, {1.0, 1.0}, {0.0, 1.0} };
+	GLint width{ 0 };
+	GLint height{ 0 };
+	GLint nrChannels{ 0 };
+	unsigned char* data{ stbi_load("chessBoardTexture.jpg", &width, &height, &nrChannels, 0) };
+
+	if (data)
+	{
+		glEnable(GL_TEXTURE_2D);
+		unsigned int texture;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		stbi_image_free(data);
+
+		//glBindTexture(GL_TEXTURE_2D, texture);
+	}
+	else
+		std::cout << "Error ocurred while downloading texture" << std::endl;
+
+
 	for (i = 5; i >= 0; i--) {
 		glBegin(type);
 		glNormal3fv(&n[i][0]);
-		glVertex3fv(&v[faces[i][0]][0]);
-		glVertex3fv(&v[faces[i][1]][0]);
-		glVertex3fv(&v[faces[i][2]][0]);
-		glVertex3fv(&v[faces[i][3]][0]);
+		for (int j = 0; j < 4; ++j)
+		{
+			glTexCoord2fv(texCoords[j]);
+			glVertex3fv(&v[faces[i][j]][0]);
+		}
 		glEnd();
 	}
+
+	glDisable(GL_TEXTURE_2D);
 }
 
 ChessCube::ChessCube(const GLint size)
@@ -90,5 +122,13 @@ void ChessCube::textureGenerator()
 	GLint width{ 0 };
 	GLint height{ 0 };
 	GLint nrChannels{ 0 };
+
+	unsigned char* data{ stbi_load("chessBoardTexture.jpg", &width, &height, &nrChannels, 0) };
+	unsigned int texture{ 0 };
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	
 }
 
